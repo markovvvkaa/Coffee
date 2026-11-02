@@ -1,0 +1,101 @@
+.popular {
+  width: min(var(--content-width), 100% - 2 * var(--gutter));
+  margin: 88px auto 0;
+}
+.popular__inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: center;
+  gap: 40px;
+  min-height: 420px;
+  padding: 56px 64px;
+  overflow: hidden;
+  border-radius: var(--radius-l);
+  background:
+    radial-gradient(circle at 76% 50%, rgb(201 138 74 / 0.42), transparent 46%),
+    linear-gradient(100deg, rgb(36 24 19 / 0.97) 0%, rgb(36 24 19 / 0.9) 52%, rgb(36 24 19 / 0.7) 100%),
+    var(--hero-image) center / cover,
+    var(--espresso);
+  color: var(--cream);
+}
+.popular__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding: 8px 16px;
+  border: 1px solid rgb(250 238 226 / 0.35);
+  border-radius: 999px;
+  font: 500 16px/1 var(--font-ui);
+}
+.popular__label svg {
+  width: 16px;
+  height: 16px;
+  fill: var(--caramel);
+}
+.popular__title {
+  margin: 0;
+  font: 400 60px/1.1 var(--font-display);
+  text-wrap: balance;
+}
+.popular__desc {
+  max-width: 460px;
+  margin: 18px 0 28px;
+  color: rgb(250 238 226 / 0.78);
+  font: 400 19px/1.55 var(--font-ui);
+}
+.popular__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.popular__price {
+  font: 600 38px/1 var(--font-ui);
+}
+.popular__amount {
+  color: rgb(250 238 226 / 0.7);
+  font: 500 19px/1 var(--font-ui);
+}
+.popular__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.popular__media {
+  justify-self: center;
+  width: min(360px, 100%);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  padding: 10px;
+  background: rgb(250 238 226 / 0.1);
+  box-shadow: 0 0 0 1px rgb(250 238 226 / 0.18), 0 30px 70px rgb(0 0 0 / 0.45);
+}
+.popular__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+@media (max-width: 1024px) {
+  .popular__inner { padding: 44px; gap: 28px; }
+  .popular__title { font-size: 46px; }
+}
+@media (max-width: 760px) {
+  .popular { margin-top: 56px; }
+  .popular__inner {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 32px 24px 36px;
+    background:
+      radial-gradient(circle at 50% 22%, rgb(201 138 74 / 0.4), transparent 45%),
+      linear-gradient(rgb(36 24 19 / 0.9), rgb(36 24 19 / 0.97)),
+      var(--hero-image) center / cover,
+      var(--espresso);
+  }
+  .popular__media { order: -1; width: min(240px, 80%); }
+  .popular__title { font-size: 36px; }
+  .popular__desc { font-size: 17px; }
+  .popular__price { font-size: 30px; }
+}

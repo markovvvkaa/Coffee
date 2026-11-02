@@ -1,0 +1,37 @@
+.qty {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.qty__btn {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  font: 600 22px/1 var(--font-ui);
+  cursor: pointer;
+}
+.qty__btn:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+.qty__btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.qty__value {
+  min-width: 28px;
+  text-align: center;
+  font: 600 19px/1 var(--font-ui);
+}
+.qty--l {
+  height: 52px;
+}
+.qty--l .qty__btn {
+  width: 52px;
+  height: 52px;
+}

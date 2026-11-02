@@ -1,0 +1,75 @@
+.field {
+  display: grid;
+  gap: 6px;
+}
+.field__label,
+.choice-legend {
+  font: 600 16px/1.3 var(--font-ui);
+}
+.input {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 16px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-s);
+  background: var(--white);
+  color: var(--text);
+  font: 400 17px/1.4 var(--font-ui);
+}
+textarea.input {
+  min-height: 88px;
+  resize: vertical;
+}
+.input:hover {
+  border-color: var(--accent);
+}
+.field--error .input {
+  border-color: var(--error);
+  background: #fff7f5;
+}
+.field__error {
+  color: var(--error);
+  font: 500 14px/1.3 var(--font-ui);
+}
+.field__hint {
+  color: var(--text-muted);
+  font: 400 14px/1.3 var(--font-ui);
+}
+.choice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.choice-legend {
+  margin-bottom: 6px;
+  padding: 0;
+}
+.choice label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 18px;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  background: var(--white);
+  font: 500 16px/1 var(--font-ui);
+  cursor: pointer;
+}
+.choice input {
+  accent-color: var(--accent);
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+.choice label:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--card);
+}
+.choice label:has(input:focus-visible) {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
