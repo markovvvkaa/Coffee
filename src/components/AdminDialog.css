@@ -1,3 +1,6 @@
+.modal.admin {
+  scrollbar-width: none;
+}
 .admin__box {
   padding: 36px 36px 32px;
 }
