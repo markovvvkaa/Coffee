@@ -55,3 +55,8 @@ export function paginate<T>(items: readonly T[], page: number, perPage: number):
   const slice = items.slice(start, start + perPage)
   return { items: slice, page: current, pages, total, from: total ? start + 1 : 0, to: start + slice.length }
 }
+
+/** Позиция для баннера: выбранная, если она есть и в наличии, иначе первая доступная. */
+export function popularItem(menu: readonly MenuItem[], popularId: string): MenuItem | undefined {
+  return menu.find((i) => i.id === popularId && i.available) ?? menu.find((i) => i.available)
+}

@@ -23,3 +23,10 @@ dist-ssr
 *.sln
 *.sw?
 *.tsbuildinfo
+
+# база данных и загруженные фото создаются при работе сервера
+server/data/db.json
+server/data/db.json.tmp
+server/uploads/*
+!server/uploads/.gitkeep
+.env

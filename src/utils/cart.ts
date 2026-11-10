@@ -39,3 +39,15 @@ export function cartTotal(lines: readonly CartLine[]): number {
 export function pruneCart(cart: Cart, menu: readonly MenuItem[]): Cart {
   return Object.fromEntries(cartLines(cart, menu).map((l) => [l.item.id, l.qty]))
 }
+
+/** Разбор сохранённой корзины: только положительные целые количества. */
+export function parseCart(raw: string | null): Record<string, number> {
+  if (!raw) return {}
+  try {
+    const data: unknown = JSON.parse(raw)
+    if (typeof data !== 'object' || data === null || Array.isArray(data)) return {}
+    return Object.fromEntries(Object.entries(data).filter(([, q]) => typeof q === 'number' && Number.isInteger(q) && q > 0 && q <= MAX_QTY)) as Record<string, number>
+  } catch {
+    return {}
+  }
+}

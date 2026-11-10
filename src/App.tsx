@@ -1,14 +1,11 @@
-import { useEffect, useMemo, useState, type CSSProperties } from 'react'
+import { useMemo, useState, type CSSProperties } from 'react'
 import heroImage from './assets/hero.jpg'
-import { BASE_MENU } from './data/menu'
-import { filterMenu, paginate, sortMenu, type CategoryFilter, type SortOrder } from './utils/catalog'
-import { cartCount, cartLines, cartTotal, pruneCart, setQty, type Cart } from './utils/cart'
-import {
-  addItem, applyMenuState, EMPTY_STATE, parseCart, parseMenuState, popularItem, removeItem, setPopular, updateItem,
-} from './utils/menuState'
+import { filterMenu, paginate, popularItem, sortMenu, type CategoryFilter, type SortOrder } from './utils/catalog'
+import { cartCount, cartLines, cartTotal, parseCart, pruneCart, setQty, type Cart } from './utils/cart'
 import { buildOrder, parseOrders } from './utils/orders'
 import type { OrderForm } from './utils/validation'
 import { readStorage, useStoredState, writeStorage } from './hooks/useStoredState'
+import { useMenu } from './hooks/useMenu'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import MenuSection from './components/MenuSection'
@@ -17,17 +14,16 @@ import Footer, { type InfoTopic } from './components/Footer'
 import ProductDialog from './components/ProductDialog'
 import CartDrawer from './components/CartDrawer'
 import OrderDialog from './components/OrderDialog'
-import AdminDialog from './components/AdminDialog'
 import InfoDialog from './components/InfoDialog'
 
 const PER_PAGE = 6
-const KEYS = { menu: 'coffee:menu', cart: 'coffee:cart', orders: 'coffee:orders' }
-type DialogName = 'cart' | 'order' | 'admin' | null
+const KEYS = { cart: 'coffee:cart', orders: 'coffee:orders' }
+type DialogName = 'cart' | 'order' | null
 
 export default function App() {
-  const [menuState, setMenuState] = useStoredState(KEYS.menu, parseMenuState)
+  // меню и позиция для баннера приходят с сервера (управляются в админ-панели admin.html)
+  const { items: menu, popularId, source } = useMenu()
   const [storedCart, setCart] = useStoredState<Cart>(KEYS.cart, parseCart)
-  const menu = useMemo(() => applyMenuState(BASE_MENU, menuState), [menuState])
   const cart = useMemo(() => pruneCart(storedCart, menu), [storedCart, menu])
   const lines = cartLines(cart, menu)
 
@@ -36,13 +32,13 @@ export default function App() {
   const [sort, setSort] = useState<SortOrder>('default')
   const [pageNumber, setPageNumber] = useState(1)
   const [productId, setProductId] = useState<string | null>(null)
-  const [dialog, setDialog] = useState<DialogName>(() => (window.location.hash === '#manage' ? 'admin' : null))
+  const [dialog, setDialog] = useState<DialogName>(null)
   const [info, setInfo] = useState<InfoTopic | null>(null)
   const [announce, setAnnounce] = useState('')
 
   const found = useMemo(() => sortMenu(filterMenu(menu, { category, search }), sort), [menu, category, search, sort])
   const page = paginate(found, pageNumber, PER_PAGE)
-  const popular = popularItem(menu, menuState.popularId)
+  const popular = popularItem(menu, popularId)
 
   const changeQuery = <T,>(setter: (v: T) => void) => (v: T) => { setter(v); setPageNumber(1) }
 
@@ -72,11 +68,6 @@ export default function App() {
     return order.number
   }
 
-  useEffect(() => {
-    if (dialog === 'admin') history.replaceState(null, '', '#manage')
-    else if (window.location.hash === '#manage') history.replaceState(null, '', window.location.pathname + window.location.search)
-  }, [dialog])
-
   return (
     <div className="page" style={{ '--hero-image': `url(${heroImage})` } as CSSProperties}>
       <a className="skip-link" href="#menu">Перейти к меню</a>
@@ -88,6 +79,7 @@ export default function App() {
         <Hero />
         <MenuSection
           page={page} 
+          loading={source === 'loading'}
           category={category} 
           search={search} 
           sort={sort} 
@@ -101,7 +93,7 @@ export default function App() {
         />
         {popular && <PopularBanner item={popular} qty={cart[popular.id] ?? 0} onQty={onQty} onOpen={setProductId} />}
       </main>
-      <Footer onInfo={setInfo} onManage={() => setDialog('admin')} />
+      <Footer onInfo={setInfo} />
 
       <ProductDialog
         item={menu.find((i) => i.id === productId)} 
@@ -128,18 +120,6 @@ export default function App() {
         onSubmit={submitOrder} 
         onClose={() => setDialog(null)} 
         onMenu={goToMenu} />
-      <AdminDialog
-        open={dialog === 'admin'} 
-        menu={menu} 
-        popularId={popular?.id ?? menuState.popularId} 
-        onClose={() => setDialog(null)}
-        onPrice={(id, price) => setMenuState((s) => updateItem(s, id, { price }))}
-        onAvailable={(id, available) => setMenuState((s) => updateItem(s, id, { available }))}
-        onPopular={(id) => setMenuState((s) => setPopular(s, id))}
-        onRemove={(id) => setMenuState((s) => removeItem(s, id))}
-        onAdd={(item) => setMenuState((s) => addItem(s, item))}
-        onReset={() => setMenuState(EMPTY_STATE)}
-      />
       <InfoDialog topic={info} onClose={() => setInfo(null)} />
       <p className="visually-hidden" role="status" aria-live="polite">{announce}</p>
     </div>
