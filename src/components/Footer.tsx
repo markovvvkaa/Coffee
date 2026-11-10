@@ -5,10 +5,9 @@ export type InfoTopic = 'about' | 'contacts' | 'help'
 
 interface Props {
   onInfo: (topic: InfoTopic) => void
-  onManage: () => void
 }
 
-export default function Footer({ onInfo, onManage }: Props) {
+export default function Footer({ onInfo }: Props) {
   return (
     <footer className="footer" id="contacts">
       <div className="footer__inner">
@@ -22,7 +21,7 @@ export default function Footer({ onInfo, onManage }: Props) {
       </div>
       <div className="footer__bottom">
         <span>© 2026 Coffee. Кофейня в Новокузнецке</span>
-        <button type="button" className="footer__manage" onClick={onManage}>Управление меню</button>
+        <a className="footer__manage" href="admin.html">Управление меню</a>
       </div>
     </footer>
   )

@@ -7,6 +7,8 @@ import './MenuSection.css'
 
 interface Props {
   page: Page<MenuItem>
+  /** Меню ещё загружается с сервера. */
+  loading?: boolean
   category: CategoryFilter
   search: string
   sort: SortOrder
@@ -28,7 +30,7 @@ export default function MenuSection(p: Props) {
         <div className="menu__head">
           <h2 className="menu__title" id="menu-title">Меню</h2>
           <p className="menu__found" aria-live="polite">
-            {p.page.total ? `Показано ${p.page.from}–${p.page.to} из ${p.page.total}` : 'Ничего не найдено'}
+            {p.loading ? 'Загрузка меню…' : p.page.total ? `Показано ${p.page.from}–${p.page.to} из ${p.page.total}` : 'Ничего не найдено'}
           </p>
         </div>
         <div className="menu__toolbar">
@@ -51,7 +53,9 @@ export default function MenuSection(p: Props) {
             </label>
           </div>
         </div>
-        {p.page.total ? (
+        {p.loading ? (
+          <div className="menu__loading" aria-hidden="true">{Array.from({ length: 3 }, (_, i) => <span key={i} />)}</div>
+        ) : p.page.total ? (
           <ul className="menu__grid">
             {p.page.items.map((item) => (
               <li key={item.id}><MenuCard item={item} qty={p.cart[item.id] ?? 0} onOpen={p.onOpen} onQty={p.onQty} /></li>

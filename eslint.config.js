@@ -19,4 +19,10 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    // сервер на Node.js (обычный JavaScript)
+    files: ['server/**/*.js'],
+    extends: [js.configs.recommended],
+    languageOptions: { globals: globals.node, sourceType: 'module' },
+  },
 ])
