@@ -25,10 +25,14 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   if (token) headers.set('authorization', `Bearer ${token}`)
   if (init.body && !(init.body instanceof FormData)) headers.set('content-type', 'application/json')
   let res: Response
+  const ctrl = new AbortController()
+  const timer = setTimeout(() => ctrl.abort(), 15000) // сервер не ответил за 15 секунд
   try {
-    res = await fetch(`api/${path}`, { ...init, headers })
+    res = await fetch(`api/${path}`, { ...init, headers, signal: ctrl.signal })
   } catch {
     throw new ApiError('Сервер недоступен. Запустите его командой npm run dev.', 0)
+  } finally {
+    clearTimeout(timer)
   }
   const data = await res.json().catch(() => null)
   if (!data) throw new ApiError('Сервер недоступен. Запустите его командой npm run dev.', res.status)
